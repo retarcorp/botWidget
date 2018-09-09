@@ -16,6 +16,18 @@ res.header('Access-Control-Allow-Credentials', 'true')
 next();
 })
 
+let obj = [
+  {
+    sumbol: 'BNBBTC',
+    interval: '1m',
+    reating: ''
+  },  {
+      sumbol: 'ABSUSD',
+      interval: '1m',
+      reating: ''
+    }
+];
+
 app.get('/test', (req, res, next) => {
   console.log('test')
   console.log(req.body)
@@ -24,7 +36,14 @@ app.get('/test', (req, res, next) => {
 
 app.post('/data', function(req,res) {
   console.log(req.body);
+  obj = req.body;
   res.send('lol')
+})
+
+app.get('/data', function(req,res) {
+  console.log('get')
+  console.log(obj)
+  res.send(obj)
 })
 
 app.listen(3000, () => console.log('3000'))
