@@ -6,15 +6,18 @@ const cors = require('cors');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+
 app.use(cors({
-origin: 'https://ru.tradingview.com',
+origin: 'chrome-extension://ahhmdlkbkakfdmjpilgjckkanckpccoo',
 credentials: true
 }));
 app.use((req, res, next) => {
-res.header('Access-Control-Allow-Origin', 'https://ru.tradingview.com');
+res.header('Access-Control-Allow-Origin', 'chrome-extension://ahhmdlkbkakfdmjpilgjckkanckpccoo');
 res.header('Access-Control-Allow-Credentials', 'true')
 next();
 })
+
 
 let obj = [
   {
@@ -23,7 +26,7 @@ let obj = [
     reating: ''
   },  {
       sumbol: 'ABSUSD',
-      interval: '1m',
+      interval: '5m',
       reating: ''
     }
 ];
