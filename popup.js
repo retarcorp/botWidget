@@ -13,7 +13,7 @@ document.getElementById('btn').addEventListener('click', function() {
       let xhr = new XMLHttpRequest();
       xhr.open('GET','http://localhost:3000/data',true);
       xhr.addEventListener('load', function(){
-        update(JSON.parse(xhr.responseText))
+        xhr.responseText == '[]' ? start() : update(JSON.parse(xhr.responseText))
       })
       xhr.send()
     }

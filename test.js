@@ -23,8 +23,6 @@ const update = function(data) {
     // console.log(document.getElementsByClassName('tv-data-table__tbody')[1].children.length)
       if ( document.getElementsByClassName('tv-data-table__tbody')[1].children[0]
       .children[0].children[0].children[1].children[0].innerText === data[i].sumbol ) {
-        console.log(document.getElementsByClassName('tv-data-table__tbody')[1].children[0].children[7].firstElementChild.innerText)
-        console.log(check[document.getElementsByClassName('tv-data-table__tbody')[1].children[0].children[7].firstElementChild.innerText])
         data[i].reating = check[document.getElementsByClassName('tv-data-table__tbody')[1].children[0].children[7].firstElementChild.innerText];
         if(i){
           i--;
@@ -54,3 +52,7 @@ const find = function(need) {
    console.log(data)
  }
 start();
+
+const click = new Event('click')
+let time = document.getElementsByClassName('tv-dropdown__button tv-dropdown-behavior__button tv-screener-toolbar__button tv-screener-toolbar__button--arrow-down tv-screener-toolbar__button--with-state apply-common-tooltip common-tooltip-fixed')
+time[0].children[2].dispatchEvent(click);

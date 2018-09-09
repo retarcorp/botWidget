@@ -28,21 +28,14 @@ let obj = [
     }
 ];
 
-app.get('/test', (req, res, next) => {
-  console.log('test')
-  console.log(req.body)
-  res.send('test complited')
-})
-
 app.post('/data', function(req,res) {
-  console.log(req.body);
   obj = req.body;
-  res.send('lol')
+  console.log(obj)
+  res.send('')
 })
 
 app.get('/data', function(req,res) {
-  console.log('get')
-  console.log(obj)
+
   res.send(obj)
 })
 
