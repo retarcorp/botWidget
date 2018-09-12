@@ -15,7 +15,7 @@ document.getElementById('btn').addEventListener('click', function() {
     }
     const start = function() {
       let xhr = new XMLHttpRequest();
-      xhr.open('GET','http://localhost:8072/api/tradeSignals/getData',true);
+      xhr.open('GET','http://localhost:3003/api/tradeSignals/getData',true);
       xhr.addEventListener('load', function(){
         xhr.responseText == '[]' ? start() : update(JSON.parse(xhr.responseText))
       })
@@ -50,7 +50,7 @@ document.getElementById('btn').addEventListener('click', function() {
     }
      const request = function(data) {
        let xhr = new XMLHttpRequest();
-       xhr.open('POST','http://localhost:8072/api/tradeSignals/postData',true);
+       xhr.open('POST','http://localhost:3003/api/tradeSignals/postData',true);
        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
        xhr.addEventListener('load', function(){
          start();

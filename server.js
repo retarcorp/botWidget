@@ -2,47 +2,33 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const Mongo = require('./Mongo')
+let symbols = require('./symbols')
+let Symbols = require('./Sy')
+Mongo.init()
+.then(data => {
+	Symbols.initClient()
+	Symbols.updateSymbolsPriceFilter()
+})
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-
 app.use(cors({
-origin: 'chrome-extension://ahhmdlkbkakfdmjpilgjckkanckpccoo',
-credentials: true
+  origin: 'chrome-extension://pmjpmhnebaljfhlbhdmpdekpddpimjbh',
+  credentials: true
 }));
 app.use((req, res, next) => {
-res.header('Access-Control-Allow-Origin', 'chrome-extension://ahhmdlkbkakfdmjpilgjckkanckpccoo');
-res.header('Access-Control-Allow-Credentials', 'true')
-next();
+  res.header('Access-Control-Allow-Origin', 'chrome-extension://pmjpmhnebaljfhlbhdmpdekpddpimjbh');
+  res.header('Access-Control-Allow-Credentials', 'true')
+  next();
 })
 
+app.use(symbols)
 
-let obj = [
-  {
-    sumbol: 'BNBBTC',
-    interval: '1m',
-    reating: ''
-  },  {
-      sumbol: 'ABSUSD',
-      interval: '5m',
-      reating: ''
-    }
-];
 
-app.post('/data', function(req,res) {
-  obj = req.body;
-  console.log(obj)
-  res.send('')
-})
-
-app.get('/data', function(req,res) {
-
-  res.send(obj)
-})
-
-app.listen(3000, () => console.log('3000'))
+app.listen(3003, () => console.log('3003'))
 
 
 
