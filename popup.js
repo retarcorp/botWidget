@@ -22,7 +22,7 @@ document.getElementById('btn').addEventListener('click', function() {
       xhr.send()
     }
     const update = function(data) {
-      console.log(data)
+      // console.log(data)
       let i = data.length - 1;
       find(data[i])
       let interval = setInterval(function () {
@@ -41,10 +41,10 @@ document.getElementById('btn').addEventListener('click', function() {
       }, 100);
     }
     const find = function(need) {
-      console.log(need)
+      // console.log(need)
       input.value = need.symbol;
       document.getElementsByClassName('tv-dropdown__button tv-dropdown-behavior__button tv-screener-toolbar__button tv-screener-toolbar__button--arrow-down tv-screener-toolbar__button--with-state apply-common-tooltip common-tooltip-fixed')[0].click();
-      console.log(check[need.timeframe])
+      // console.log(check[need.timeframe])
       document.querySelector('[title="' + check[need.timeframe] +'"]').click()
       input.dispatchEvent(keyup);
     }

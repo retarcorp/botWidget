@@ -145,10 +145,17 @@ module.exports = {
 		if (!(typeof key == 'object')) key = {};
 		change.forEach((elem, i) => {
 			delete elem._id
-			this.update({ id: elem.id }, elem, collection, (err, data) => {
-				if(i == length && callback) callback(data) 
+			console.log('_________' + i)
+			console.log(elem.id)
+			coll.update({id: elem.id}, {$set: {rating: elem.rating}}, (err, data) => {
+				this.Assert.equal(err, null)
+				// if(callback) callback(data, err);
 			})
+			// this.update({ id: elem.id }, elem, collection, (err, data) => {
+			// 	if(i == length && callback) callback(data) 
+			// })
 		})
+		if(callback) callback('ok')
 	}
 
 	,update: function(key, change, collection, callback) {
