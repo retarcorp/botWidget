@@ -3,6 +3,7 @@ document.getElementById('btn').addEventListener('click', function() {
     code : `
     const keyup = new Event('keyup');
     const input = document.getElementsByClassName('tv-screener-table__search-input')[0];
+    var pending = false;
     const check = {
       '1m' : '1 minute',
       '5m' : '5 minutes',
@@ -24,22 +25,39 @@ document.getElementById('btn').addEventListener('click', function() {
       xhr.send()
     };
 
-    const getFromApi(cb) {
-    	var xhr = new XMLHttpRequest();
-	    xhr.onload = () => {
-	        if (cb) cb(xhr.response);
-	    }
-	    xhr.open('POST', 'https://scanner.tradingview.com/crypto/scan');
-	    xhr.send(JSON.stringify({"filter":[{"left":"exchange","operation":"nempty"},{"left":"exchange","operation":"equal","right":"BINANCE"}],"symbols":{"query":{"types":[]},"tickers":[]},"columns":["name","close","change","change_abs","high","low","volume","Recommend.All","exchange","description","name","subtype","pricescale","minmov","fractional","minmove2"],"sort":{"sortBy":"exchange","sortOrder":"asc"},"options":{"lang":"en"},"range":[0,1000]}));
-    }
+    const getFromApi = function(timeframe) {
+    	return new Promise( (res, rej) => {
+    		pending = true;
+	    	var xhr = new XMLHttpRequest();
+		    xhr.onload = () => {
+		        res(xhr.response);
+		    }
 
-    const update = function(data) {
-     	getFromApi((response) => {
-     		response = JSON.parse(response);
-     		binance = response.data;
+		    (timeframe.indexOf('D') >= 0) ? (timeframe = "")) : timeframe = "|"+timeframe;
 
-     		requets(data.map( (elm) => {
-     			const curr = binance.find( bin => bin.d[0] == elm.symbol);
+		    xhr.open('POST', 'https://scanner.tradingview.com/crypto/scan');
+		    xhr.send(JSON.stringify({"filter":[{"left":"exchange","operation":"nempty"},{"left":"exchange","operation":"equal","right":"BINANCE"}],"symbols":{"query":{"types":[]},"tickers":[]},"columns":["name","close"+timeframe,"change"+timeframe,"change_abs"+timeframe,"high"+timeframe,"low"+timeframe,"volume"+timeframe,"Recommend.All"+timeframe,"exchange","description","name","subtype","pricescale","minmov","fractional","minmove2"],"sort":{"sortBy":"exchange","sortOrder":"asc"},"options":{"lang":"en"},"range":[0,1000]}));
+    	});
+    	
+    };
+
+    const update = async function(data) {
+    	var tmfs = [];
+
+    	data.map( elem => {
+    		!(tmfs.find( tmf => tmf === elem.timeframe)) && tmfs.push(elem.timeframe);
+    	});
+
+    	console.log(tmfs);
+
+    	for (let tmf of tmfs) {
+    		response = await getFromApi(tmf.toLocaleUpperCase());
+    		response = JSON.parse(response);
+
+    		binance = response.data;
+
+    		data = data.map( (elm) => {
+     			const curr = binance.find( bin => bin.d[0] == elm.symbol && elm.timeframe == tmf);
 
      			if (!curr) {
      				return elm;
@@ -49,12 +67,15 @@ document.getElementById('btn').addEventListener('click', function() {
      			curr.d[7] >= 0.5 && (elm.rating = "Active Buy");
      			curr.d[7] > -0.5 && curr.d[7] < 0 && (elm.rating = "Sell");
      			curr.d[7] <= -0.5 && (elm.rating = "Active Sell");
-     			curr.d[7] == 0 (elm.rating = "Neutral");
-     			curr.d[7] === null (elm.rating = "-");
+     			curr.d[7] == 0 && (elm.rating = "Neutral");
+     			curr.d[7] === null && (elm.rating = "-");
 
      			return elm;
-     		}));
-     	});
+     		});
+
+     	}
+
+     	getFromApi(data);
     };
 
     const find = function(need) {
@@ -69,9 +90,9 @@ document.getElementById('btn').addEventListener('click', function() {
        let xhr = new XMLHttpRequest();
        xhr.open('POST','http://localhost:3003/api/tradeSignals/postData',true);
        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-       xhr.addEventListener('load', function(){
-         setTimeout(start, 1000);
-       });
+       xhr.onload = function(){
+       		setTimeout(start, 1000);
+       };
        xhr.send(JSON.stringify(data))
      };
      start()
