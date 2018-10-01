@@ -12,7 +12,9 @@ document.getElementById('btn').addEventListener('click', function() {
       '1d' : '1 day',
       '1w' : '1 week',
       '1M' : '1 month'
-    }
+    };
+    const TYPE = "BINANCE";
+
     const start = function() {
       let xhr = new XMLHttpRequest();
       xhr.open('GET','http://localhost:3003/api/tradeSignals/getData',true);
@@ -20,26 +22,41 @@ document.getElementById('btn').addEventListener('click', function() {
         xhr.responseText == '[]' ? start() : update(JSON.parse(xhr.responseText))
       })
       xhr.send()
-    }
-    const update = function(data) {
-      // console.log(data)
-      let i = data.length - 1;
-      find(data[i])
-      let interval = setInterval(function () {
-          if ( document.getElementsByClassName('tv-data-table__tbody')[1].children[0]
-          .children[0].children[0].children[1].children[0].innerText === data[i].symbol ) {
-            data[i].rating = document.getElementsByClassName('tv-data-table__tbody')[1].children[0].children[7].firstElementChild.innerText;
-            if(i){
-              i--;
-              find(data[i])
-            } else {
-              clearInterval(interval);
-              request(data)
-            }
+    };
 
-        }
-      }, 100);
+    const getFromApi(cb) {
+    	var xhr = new XMLHttpRequest();
+	    xhr.onload = () => {
+	        if (cb) cb(xhr.response);
+	    }
+	    xhr.open('POST', 'https://scanner.tradingview.com/crypto/scan');
+	    xhr.send(JSON.stringify({"filter":[{"left":"exchange","operation":"nempty"},{"left":"exchange","operation":"equal","right":"BINANCE"}],"symbols":{"query":{"types":[]},"tickers":[]},"columns":["name","close","change","change_abs","high","low","volume","Recommend.All","exchange","description","name","subtype","pricescale","minmov","fractional","minmove2"],"sort":{"sortBy":"exchange","sortOrder":"asc"},"options":{"lang":"en"},"range":[0,1000]}));
     }
+
+    const update = function(data) {
+     	getFromApi((response) => {
+     		response = JSON.parse(response);
+     		binance = response.data;
+
+     		requets(data.map( (elm) => {
+     			const curr = binance.find( bin => bin.d[0] == elm.symbol);
+
+     			if (!curr) {
+     				return elm;
+     			}
+
+     			curr.d[7] < 0.5 && curr.d[7] > 0 (&& elm.rating = "Buy");
+     			curr.d[7] >= 0.5 && (elm.rating = "Active Buy");
+     			curr.d[7] > -0.5 && curr.d[7] < 0 && (elm.rating = "Sell");
+     			curr.d[7] <= -0.5 && (elm.rating = "Active Sell");
+     			curr.d[7] == 0 (elm.rating = "Neutral");
+     			curr.d[7] === null (elm.rating = "-");
+
+     			return elm;
+     		}));
+     	});
+    };
+
     const find = function(need) {
       // console.log(need)
       input.value = need.symbol;
@@ -53,10 +70,10 @@ document.getElementById('btn').addEventListener('click', function() {
        xhr.open('POST','http://localhost:3003/api/tradeSignals/postData',true);
        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
        xhr.addEventListener('load', function(){
-         start();
+         setTimeout(start, 1000);
        });
        xhr.send(JSON.stringify(data))
-     }
+     };
      start()
     `
   })
