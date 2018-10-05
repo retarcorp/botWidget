@@ -33,7 +33,7 @@ document.getElementById('btn').addEventListener('click', function() {
 		        res(xhr.response);
 		    }
 
-		    (timeframe.indexOf('D') >= 0) ? (timeframe = "")) : timeframe = "|"+timeframe;
+		    (timeframe.indexOf('D') >= 0) ? (timeframe = "") : timeframe = "|"+timeframe;
 
 		    xhr.open('POST', 'https://scanner.tradingview.com/crypto/scan');
 		    xhr.send(JSON.stringify({"filter":[{"left":"exchange","operation":"nempty"},{"left":"exchange","operation":"equal","right":"BINANCE"}],"symbols":{"query":{"types":[]},"tickers":[]},"columns":["name","close"+timeframe,"change"+timeframe,"change_abs"+timeframe,"high"+timeframe,"low"+timeframe,"volume"+timeframe,"Recommend.All"+timeframe,"exchange","description","name","subtype","pricescale","minmov","fractional","minmove2"],"sort":{"sortBy":"exchange","sortOrder":"asc"},"options":{"lang":"en"},"range":[0,1000]}));
@@ -63,7 +63,7 @@ document.getElementById('btn').addEventListener('click', function() {
      				return elm;
      			}
 
-     			curr.d[7] < 0.5 && curr.d[7] > 0 (&& elm.rating = "Buy");
+     			curr.d[7] < 0.5 && curr.d[7] > 0 && (elm.rating = "Buy");
      			curr.d[7] >= 0.5 && (elm.rating = "Active Buy");
      			curr.d[7] > -0.5 && curr.d[7] < 0 && (elm.rating = "Sell");
      			curr.d[7] <= -0.5 && (elm.rating = "Active Sell");
@@ -75,7 +75,7 @@ document.getElementById('btn').addEventListener('click', function() {
 
      	}
 
-     	getFromApi(data);
+     	request(data);
     };
 
     const find = function(need) {
