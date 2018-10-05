@@ -1,6 +1,5 @@
 document.getElementById('btn').addEventListener('click', function() {
-  chrome.tabs.executeScript({
-    code : `
+  
     const keyup = new Event('keyup');
     const input = document.getElementsByClassName('tv-screener-table__search-input')[0];
     var pending = false;
@@ -96,6 +95,4 @@ document.getElementById('btn').addEventListener('click', function() {
        xhr.send(JSON.stringify(data))
      };
      start()
-    `
-  })
 })
