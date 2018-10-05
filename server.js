@@ -16,11 +16,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use(cors({
-  origin: 'chrome-extension://*',
+  origin: 'chrome-extension://fojbjchgejaolhpebfjfkifmgafmaehg',
   credentials: true
 }));
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'chrome-extension://*');
+  res.header('Access-Control-Allow-Origin', 'chrome-extension://fojbjchgejaolhpebfjfkifmgafmaehg');
   res.header('Access-Control-Allow-Credentials', 'true')
   next();
 })
